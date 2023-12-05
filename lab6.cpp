@@ -49,43 +49,45 @@ float zad_2_4(zad1_kolo kolo) {
 	return M_PI * pow(kolo.r, 2);
 }
 
-void zad_2_5(zad1_kolo kolo1, zad1_kolo kolo2) {
+enum polozenie { WspolSr, StyWew, StyZew, RozWew, RozZew, Przec };
+
+polozenie zad_2_5(zad1_kolo kolo1, zad1_kolo kolo2) {
 	float R = kolo1.r;
 	float r = kolo2.r;
 	//float R = kolo1.r > kolo2.r ? kolo1.r : kolo2.r);
 	//float r = (kolo1.r < kolo2.r ? kolo1.r : kolo2.r);
 
-	enum polozenie { WspolSr, StyWew, StyZew, RozWew, RozZew, Przec };
-
-	if (kolo1.punkt.x == kolo2.punkt.x && kolo1.punkt.y == kolo2.punkt.y) {
-		std::cout << "Okregi sa wspolsrodkowe";
-		return;
-	}
+	if (kolo1.punkt.x == kolo2.punkt.x && kolo1.punkt.y == kolo2.punkt.y) return WspolSr;
 
 	float s1s2 = zad_2_1({ kolo1.punkt.x, kolo1.punkt.y }, { kolo2.punkt.x, kolo2.punkt.y });
-	if (s1s2 == abs(R - r)) {
-		std::cout << "Okregi sa styczne wewnetrznie" << std::endl;
-		return;
-	}
-	else if (s1s2 == R + r) {
-		std::cout << "Okregi sa styczne zewnetrznie" << std::endl;
-		return;
-	}
-	else if (s1s2 < abs(R - r)) {
-		std::cout << "Okregi sa rozlaczne wewnetrznie" << std::endl;
-		return;
-	}
-	else if (s1s2 > R + r) {
-		std::cout << "Okregi sa rozlaczne zewnetrznie" << std::endl;
-		return;
-	}
-	else if (abs(R - r) < s1s2 && s1s2 < R + r) {
-		std::cout << "Okregi przecinaja sie w dwoch punktach" << std::endl;
-		return;
-	}
-
+	if (s1s2 == abs(R - r)) return StyWew;
+	else if (s1s2 == R + r)	return StyZew;
+	else if (s1s2 < abs(R - r)) return RozWew;
+	else if (s1s2 > R + r) return RozZew;
+	else if (abs(R - r) < s1s2 && s1s2 < R + r) return Przec;
 }
 
 int main() {
-	zad_2_5({ {0, 0}, 4 }, { {0, 1}, 2 });
+	polozenie zad_2_5_wynik = zad_2_5({ {0, 0}, 4 }, { {0, 1}, 2 });
+
+	switch (zad_2_5_wynik) {
+		case WspolSr:
+			std::cout << "Okregi maja wspolny srodek";
+			break;
+		case StyWew:
+			std::cout << "Okregi sa styczne wewnetrznie";
+			break;
+		case StyZew:
+			std::cout << "Okregi sa styczne zewnetrznie";
+			break;
+		case RozWew:
+			std::cout << "Okregi sa rozlaczne wewnetrznie";
+			break;
+		case RozZew:
+			std::cout << "Okregi sa rozlaczne zewnetrznie";
+			break;
+		case Przec:
+			std::cout << "Okregi przecinaja sie w dwoch punktach";
+			break;
+	}
 }
